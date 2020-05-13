@@ -9,7 +9,7 @@
 //Listen for the data event from the CSPS Socket Server. When you hear that event, look at the payload sent and parse it. If it has property event equal to delivered, then you should log a thank you message to the console. Ignore all other events.
 
 const net = require('net');
-const socket = net.Socket();
+const socket = new net.Socket();
 const faker = require('faker');
 
 socket.connect({ port: 3000, host: 'localhost' }, () => {
@@ -31,13 +31,19 @@ socket.on('data', (payload) => {
   let stringPayload = Buffer.from(payload).toString();
   let jsonPayload = {};
 
+  // let parsed = JSON.parse(payload.toString());
+
+  // if (parsed.event === 'delivered'){
+  //   console.log('thank you');
+  // }
+
   try {
     jsonPayload = JSON.parse(stringPayload);
   } catch (e) {
     jsonPayload = {};
   }
 
-  if (jsonPayload.event === 'delivered')
+  if (jsonPayload.event === 'delivered') {
     console.log(`Thank you for delivering order ${jsonPayload.content.orderID}\n`);
-  else console.log(stringPayload);
+  }
 });

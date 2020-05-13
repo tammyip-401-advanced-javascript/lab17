@@ -18,14 +18,17 @@ socket.on('data', (payload) => {
     jsonPayload = {};
   }
 
-  if (jsonPayload.event === 'pickup')
+  if (jsonPayload.event === 'pickup') {
     setTimeout(() => {
       console.log(`picked up order ${jsonPayload.content.orderID}\n`);
       socket.write(JSON.stringify({ event: 'in-transit', content: jsonPayload.content, }));
     }, 1000);
+  }
 
-  setTimeout(() => {
-    console.log(`delivered order ${jsonPayload.content.orderID}\n`);
-    socket.write(JSON.stringify({ event: 'delivered', content: jsonPayload.content, }));
-  }, 3000);
+  if (jsonPayload.event === 'in-transit') {
+    setTimeout(() => {
+      console.log(`delivered order ${jsonPayload.content.orderID}\n`);
+      socket.write(JSON.stringify({ event: 'delivered', content: jsonPayload.content, }));
+    }, 3000);
+  }
 });
